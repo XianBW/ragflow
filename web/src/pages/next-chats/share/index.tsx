@@ -4,7 +4,6 @@ import MessageItem from '@/components/next-message-item';
 import PdfDrawer from '@/components/pdf-drawer';
 import { useClickDrawer } from '@/components/pdf-drawer/hooks';
 import { RAGFlowAvatar } from '@/components/ragflow-avatar';
-import { useSwitchToDarkThemeOnMount } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { MessageType } from '@/constants/chat';
 import { useFetchAppConf } from '@/hooks/logic-hooks';
@@ -30,7 +29,6 @@ import { ParameterDialog } from './parameter-dialog';
 const ChatContainer = () => {
   const {
     sharedId: conversationId,
-    from,
     locale,
     visibleAvatar,
   } = useGetSharedChatSearchParams();
@@ -62,7 +60,6 @@ const ChatContainer = () => {
     resetSession,
   } = useSendNextSharedMessage(addEventList);
 
-  // const { data } = useFetchExternalAgentInputs();
   const sendDisabled = useSendButtonDisabled(value);
   const appConf = useFetchAppConf();
   const { data: inputsData } = useFetchExternalAgentInputs();
@@ -96,12 +93,10 @@ const ChatContainer = () => {
   }, [inputsData, setAgentInfo]);
 
   React.useEffect(() => {
-    if (!isEmpty(inputsData)) {
+    if (inputsData && inputsData.inputs && !isEmpty(inputsData.inputs)) {
       showParameterDialog();
     }
   }, [inputsData, showParameterDialog]);
-
-  useSwitchToDarkThemeOnMount();
 
   const handleInputsModalOk = (params: any[]) => {
     ok(params);
@@ -144,7 +139,9 @@ const ChatContainer = () => {
         </div>
         <div className="flex flex-1 flex-col p-2.5  h-[90vh] m-3">
           <div
-            className={cn('flex flex-1 flex-col overflow-auto m-auto w-5/6')}
+            className={cn(
+              'flex flex-1 flex-col overflow-auto scrollbar-auto m-auto w-5/6',
+            )}
           >
             <div>
               {derivedMessages?.map((message, i) => {
@@ -165,6 +162,7 @@ const ChatContainer = () => {
                       sendLoading &&
                       derivedMessages?.length - 1 === i
                     }
+                    isShare={true}
                     avatarDialog={agentInfo.avatar}
                     agentName={agentInfo.title}
                     index={i}
