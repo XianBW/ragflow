@@ -1,7 +1,7 @@
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import { defineConfig } from 'umi';
-import { appName } from './src/conf.json';
+import { apiServer, appName } from './src/conf.json';
 import routes from './src/routes';
 
 export default defineConfig({
@@ -39,7 +39,7 @@ export default defineConfig({
   proxy: [
     {
       context: ['/api', '/v1'],
-      target: 'http://117.72.125.202:9380/',
+      target: apiServer.target,
       changeOrigin: true,
       ws: true,
       logger: console,

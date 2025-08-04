@@ -1,6 +1,6 @@
 {
   "appName": "PIKE-RAG",
   "apiServer": {
-    "target": "http://117.72.125.202:9380/"
+    "target": "{{API_SERVER_URL}}"
   }
-}
+} 
