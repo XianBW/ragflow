@@ -1,5 +1,6 @@
 import { LlmIcon } from '@/components/svg-icon';
 import { LlmModelType } from '@/constants/knowledge';
+import { LLMFactory } from '@/constants/llm';
 import { ResponseGetType } from '@/interfaces/database/base';
 import {
   IFactory,
@@ -231,8 +232,19 @@ export const useSelectLlmList = () => {
   }, [myLlmList, factoryList]);
 
   const nextFactoryList = useMemo(() => {
-    const currentList = factoryList.filter((x) =>
-      Object.keys(myLlmList).every((y) => y !== x.name),
+    // 只显示指定的模型
+    const allowedModels = [
+      // LLMFactory.TongYiQianWen,    // TongYiQianWen
+      LLMFactory.OpenAI, // OpenAI
+      LLMFactory.AzureOpenAI, // AzureOpenAI
+      // LLMFactory.OpenAiAPICompatible // OpenAiAPICompatible
+      LLMFactory.VLLM,
+    ];
+
+    const currentList = factoryList.filter(
+      (x) =>
+        Object.keys(myLlmList).every((y) => y !== x.name) &&
+        allowedModels.includes(x.name as LLMFactory),
     );
     return sortLLmFactoryListBySpecifiedOrder(currentList);
   }, [factoryList, myLlmList]);

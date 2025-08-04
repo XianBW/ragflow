@@ -34,12 +34,8 @@ import { CircleHelp } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import SettingTitle from '../components/setting-title';
 import { isLocalLlmFactory } from '../utils';
-import TencentCloudModal from './Tencent-modal';
 import ApiKeyModal from './api-key-modal';
 import AzureOpenAIModal from './azure-openai-modal';
-import BedrockModal from './bedrock-modal';
-import FishAudioModal from './fish-audio-modal';
-import GoogleModal from './google-modal';
 import {
   useHandleDeleteFactory,
   useHandleDeleteLlm,
@@ -56,13 +52,9 @@ import {
   useSubmitVolcEngine,
   useSubmityiyan,
 } from './hooks';
-import HunyuanModal from './hunyuan-modal';
 import styles from './index.less';
 import OllamaModal from './ollama-modal';
-import SparkModal from './spark-modal';
 import SystemModelSettingModal from './system-model-setting-modal';
-import VolcEngineModal from './volcengine-modal';
-import YiyanModal from './yiyan-modal';
 
 const { Text } = Typography;
 interface IModelCardProps {
@@ -106,13 +98,13 @@ const ModelCard = ({ item, clickApiKey, handleEditModel }: IModelCardProps) => {
               <Button onClick={handleApiKeyClick}>
                 <Flex align="center" gap={4}>
                   {isLocalLlmFactory(item.name) ||
-                  item.name === LLMFactory.VolcEngine ||
-                  item.name === LLMFactory.TencentHunYuan ||
-                  item.name === LLMFactory.XunFeiSpark ||
-                  item.name === LLMFactory.BaiduYiYan ||
-                  item.name === LLMFactory.FishAudio ||
-                  item.name === LLMFactory.TencentCloud ||
-                  item.name === LLMFactory.GoogleCloud ||
+                  // item.name === LLMFactory.VolcEngine ||
+                  // item.name === LLMFactory.TencentHunYuan ||
+                  // item.name === LLMFactory.XunFeiSpark ||
+                  // item.name === LLMFactory.BaiduYiYan ||
+                  // item.name === LLMFactory.FishAudio ||
+                  // item.name === LLMFactory.TencentCloud ||
+                  // item.name === LLMFactory.GoogleCloud ||
                   item.name === LLMFactory.AzureOpenAI
                     ? t('addTheModel')
                     : 'API-Key'}
@@ -275,14 +267,14 @@ const UserSettingModel = () => {
 
   const ModalMap = useMemo(
     () => ({
-      [LLMFactory.Bedrock]: showBedrockAddingModal,
-      [LLMFactory.VolcEngine]: showVolcAddingModal,
-      [LLMFactory.TencentHunYuan]: showHunyuanAddingModal,
-      [LLMFactory.XunFeiSpark]: showSparkAddingModal,
-      [LLMFactory.BaiduYiYan]: showyiyanAddingModal,
-      [LLMFactory.FishAudio]: showFishAudioAddingModal,
-      [LLMFactory.TencentCloud]: showTencentCloudAddingModal,
-      [LLMFactory.GoogleCloud]: showGoogleAddingModal,
+      // [LLMFactory.Bedrock]: showBedrockAddingModal,
+      // [LLMFactory.VolcEngine]: showVolcAddingModal,
+      // [LLMFactory.TencentHunYuan]: showHunyuanAddingModal,
+      // [LLMFactory.XunFeiSpark]: showSparkAddingModal,
+      // [LLMFactory.BaiduYiYan]: showyiyanAddingModal,
+      // [LLMFactory.FishAudio]: showFishAudioAddingModal,
+      // [LLMFactory.TencentCloud]: showTencentCloudAddingModal,
+      // [LLMFactory.GoogleCloud]: showGoogleAddingModal,
       [LLMFactory.AzureOpenAI]: showAzureAddingModal,
     }),
     [
@@ -458,7 +450,7 @@ const UserSettingModel = () => {
         initialValues={llmInitialValues}
         llmFactory={selectedLlmFactory}
       ></OllamaModal>
-      <VolcEngineModal
+      {/* <VolcEngineModal
         visible={volcAddingVisible}
         hideModal={hideVolcAddingModal}
         onOk={onVolcAddingOk}
@@ -513,7 +505,7 @@ const UserSettingModel = () => {
         onOk={onBedrockAddingOk}
         loading={bedrockAddingLoading}
         llmFactory={LLMFactory.Bedrock}
-      ></BedrockModal>
+      ></BedrockModal> */}
       <AzureOpenAIModal
         visible={AzureAddingVisible}
         hideModal={hideAzureAddingModal}

@@ -4,10 +4,10 @@ export enum UserSettingRouteKey {
   Profile = 'profile',
   Password = 'password',
   Model = 'model',
-  System = 'system',
+  // System = 'system',
   Api = 'api',
   Team = 'team',
-  MCP = 'mcp',
+  // MCP = 'mcp',
   Logout = 'logout',
 }
 

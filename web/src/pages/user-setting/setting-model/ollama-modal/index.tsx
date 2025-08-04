@@ -122,6 +122,12 @@ const OllamaModal = ({
       { value: 'speech2text', label: 'sequence2text' },
       { value: 'tts', label: 'tts' },
     ],
+    [LLMFactory.OpenAiAPICompatible]: [
+      { value: 'chat', label: 'chat' },
+      { value: 'embedding', label: 'embedding' },
+      { value: 'rerank', label: 'rerank' },
+      { value: 'image2text', label: 'image2text' },
+    ],
     Default: [
       { value: 'chat', label: 'chat' },
       { value: 'embedding', label: 'embedding' },
