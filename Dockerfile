@@ -204,7 +204,9 @@ COPY plugin plugin
 
 COPY docker/service_conf.yaml.template ./conf/service_conf.yaml.template
 COPY docker/entrypoint.sh ./
+COPY docker/configure_web.sh ./docker/
 RUN chmod +x ./entrypoint*.sh
+RUN chmod +x ./docker/configure_web.sh
 
 # Copy compiled web pages
 COPY --from=builder /ragflow/web/dist /ragflow/web/dist

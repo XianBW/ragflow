@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # pikerag后端服务
+  pikerag-backend:
+    build:
+      context: ..
+      dockerfile: Dockerfile.backend
+    container_name: pikerag-backend
+    ports:
+      - "9380:9380"
+      - "9381:9381"
+    environment:
+      - PYTHONPATH=/ragflow/
+    volumes:
+      - ragflow_data:/ragflow/data
+      - ragflow_logs:/ragflow/logs
+    restart: unless-stopped
+    networks:
+      - ragflow-network
+
+  # pikerag前端服务
+  pikerag-frontend:
+    build:
+      context: ..
+      dockerfile: Dockerfile.frontend
+    container_name: pikerag-frontend
+    ports:
+      - "80:80"
+    environment:
+      - API_SERVER_URL=http://pikerag-backend:9380/
+    depends_on:
+      - pikerag-backend
+    restart: unless-stopped
+    networks:
+      - ragflow-network
+
+  # 可选：任务执行器（如果需要）
+  pikerag-task-executor:
+    build:
+      context: ..
+      dockerfile: Dockerfile.backend
+    container_name: pikerag-task-executor
+    command: ["./entrypoint.sh", "--disable-webserver", "--workers=2"]
+    environment:
+      - PYTHONPATH=/ragflow/
+    volumes:
+      - ragflow_data:/ragflow/data
+      - ragflow_logs:/ragflow/logs
+    restart: unless-stopped
+    networks:
+      - pikerag-network
+    depends_on:
+      - pikerag-backend
+
+volumes:
+  ragflow_data:
+  ragflow_logs:
+
+networks:
+  pikerag-network:
+    driver: bridge 

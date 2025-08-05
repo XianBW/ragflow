@@ -140,6 +140,15 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     eval "echo \"$line\"" >> "${CONF_FILE}"
 done < "${TEMPLATE_FILE}"
 
+# -----------------------------------------------------------------------------
+# Configure web frontend API server address
+# -----------------------------------------------------------------------------
+if [ -f "/ragflow/docker/configure_web.sh" ]; then
+    echo "配置web前端API服务器地址..."
+    chmod +x /ragflow/docker/configure_web.sh
+    /ragflow/docker/configure_web.sh
+fi
+
 export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/"
 PY=python3
 
