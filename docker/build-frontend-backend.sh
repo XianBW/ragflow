@@ -16,6 +16,7 @@ NC='\033[0m' # No Color
 FRONTEND_TAG="pikerag-frontend:latest"
 BACKEND_TAG="pikerag-backend:latest"
 BUILD_CONTEXT=".."
+BACKEND_DOCKERFILE="Dockerfile.backend"
 
 # 显示帮助信息
 function show_help() {
@@ -27,6 +28,7 @@ function show_help() {
     echo "  -c, --context PATH        构建上下文路径 (默认: ..)"
     echo "  --frontend-only           只构建前端镜像"
     echo "  --backend-only            只构建后端镜像"
+    echo "  --simple-backend          使用简化版后端Dockerfile"
     echo "  --push                    构建完成后推送到镜像仓库"
     echo "  -h, --help                显示此帮助信息"
     echo ""
@@ -41,6 +43,7 @@ function show_help() {
 FRONTEND_ONLY=false
 BACKEND_ONLY=false
 PUSH_IMAGES=false
+SIMPLE_BACKEND=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -62,6 +65,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         --backend-only)
             BACKEND_ONLY=true
+            shift
+            ;;
+        --simple-backend)
+            SIMPLE_BACKEND=true
+            BACKEND_DOCKERFILE="Dockerfile.backend"
             shift
             ;;
         --push)
@@ -86,8 +94,8 @@ if [ ! -f "$BUILD_CONTEXT/Dockerfile.frontend" ]; then
     exit 1
 fi
 
-if [ ! -f "$BUILD_CONTEXT/Dockerfile.backend" ]; then
-    echo -e "${RED}错误: $BUILD_CONTEXT/Dockerfile.backend 不存在${NC}"
+if [ ! -f "$BUILD_CONTEXT/$BACKEND_DOCKERFILE" ]; then
+    echo -e "${RED}错误: $BUILD_CONTEXT/$BACKEND_DOCKERFILE 不存在${NC}"
     exit 1
 fi
 
@@ -97,6 +105,8 @@ echo "  后端镜像标签: $BACKEND_TAG"
 echo "  构建上下文: $BUILD_CONTEXT"
 echo "  只构建前端: $FRONTEND_ONLY"
 echo "  只构建后端: $BACKEND_ONLY"
+echo "  简化后端: $SIMPLE_BACKEND"
+echo "  后端Dockerfile: $BACKEND_DOCKERFILE"
 echo "  推送镜像: $PUSH_IMAGES"
 echo ""
 
@@ -116,7 +126,7 @@ fi
 # 构建后端镜像
 if [ "$BACKEND_ONLY" = true ] || [ "$FRONTEND_ONLY" = false ]; then
     echo -e "${YELLOW}开始构建后端镜像: $BACKEND_TAG${NC}"
-    docker build -f "$BUILD_CONTEXT/Dockerfile.backend" -t "$BACKEND_TAG" "$BUILD_CONTEXT"
+    docker build -f "$BUILD_CONTEXT/$BACKEND_DOCKERFILE" -t "$BACKEND_TAG" "$BUILD_CONTEXT"
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}后端镜像构建成功: $BACKEND_TAG${NC}"

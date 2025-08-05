@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # pikerag后端服务
   pikerag-backend:
@@ -17,7 +15,7 @@ services:
       - ragflow_logs:/ragflow/logs
     restart: unless-stopped
     networks:
-      - ragflow-network
+      - pikerag-network
 
   # pikerag前端服务
   pikerag-frontend:
@@ -33,7 +31,7 @@ services:
       - pikerag-backend
     restart: unless-stopped
     networks:
-      - ragflow-network
+      - pikerag-network
 
   # 可选：任务执行器（如果需要）
   pikerag-task-executor:

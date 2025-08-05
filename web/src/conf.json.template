@@ -1,6 +1,0 @@
-{
-  "appName": "PIKE-RAG",
-  "apiServer": {
-    "target": "{{API_SERVER_URL}}"
-  }
-} 

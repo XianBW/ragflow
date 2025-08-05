@@ -20,7 +20,8 @@ COPY web/package*.json ./web/
 
 # 安装前端依赖
 WORKDIR /ragflow/web
-RUN npm ci --only=production
+# 安装所有依赖（包括开发依赖），因为构建时需要
+RUN npm ci --ignore-scripts
 
 # 复制前端源代码
 COPY web/src ./src
@@ -29,10 +30,14 @@ COPY web/.umirc.ts ./
 COPY web/jest.config.ts ./
 COPY web/jest-setup.ts ./
 COPY web/tsconfig.json ./
-COPY web/tsconfig.node.json ./
-COPY web/vite.config.ts ./
 COPY web/tailwind.config.js ./
-COPY web/postcss.config.js ./
+COPY web/tailwind.css ./
+COPY web/externals.d.ts ./
+COPY web/typings.d.ts ./
+
+# 复制docs目录，因为前端代码中引用了docs文件
+# 确保docs目录在正确的位置，与@parent别名对应
+COPY docs ../docs
 
 # 构建前端
 RUN npm run build
@@ -43,37 +48,8 @@ FROM nginx:alpine
 # 复制构建好的前端文件到nginx目录
 COPY --from=base /ragflow/web/dist /usr/share/nginx/html
 
-# 复制nginx配置文件
-COPY docker/nginx/frontend.conf /etc/nginx/conf.d/default.conf
-
-# 创建配置脚本目录
-RUN mkdir -p /ragflow/docker
-
-# 复制配置脚本
-COPY docker/configure_web.sh /ragflow/docker/
-RUN chmod +x /ragflow/docker/configure_web.sh
-
-# 复制配置文件模板
-COPY web/src/conf.json.template /ragflow/web/src/
-COPY web/src/conf.json /ragflow/web/src/
-
-# 创建启动脚本
-RUN echo '#!/bin/bash\n\
-set -e\n\
-\n\
-# 配置web前端API服务器地址\n\
-if [ -f "/ragflow/docker/configure_web.sh" ]; then\n\
-    echo "配置web前端API服务器地址..."\n\
-    /ragflow/docker/configure_web.sh\n\
-fi\n\
-\n\
-# 启动nginx\n\
-echo "启动nginx服务器..."\n\
-exec nginx -g "daemon off;"\n\
-' > /ragflow/start-frontend.sh && chmod +x /ragflow/start-frontend.sh
-
 # 暴露端口
 EXPOSE 80
 
 # 设置启动命令
-CMD ["/ragflow/start-frontend.sh"] 
+CMD ["nginx", "-g", "daemon off;"] 
