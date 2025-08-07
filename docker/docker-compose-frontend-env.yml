@@ -1,0 +1,24 @@
+services:
+  # pikerag前端服务 - 使用环境变量文件
+  pikerag-fd:
+    image: docker-pikerag-frontend:latest
+    container_name: pikerag-fd
+    ports:
+      - "8080:80"
+    env_file:
+      - ./nginx/.env
+    volumes:
+      # 挂载nginx配置模板
+      - ./nginx/nginx.conf.template:/etc/nginx/conf.d/default.conf.template
+      # 挂载启动脚本
+      - ./nginx/start.sh:/start.sh
+    restart: unless-stopped
+    networks:
+      - pikerag-network
+    # 使用启动脚本
+    entrypoint: ["/bin/sh"]
+    command: ["/start.sh"]
+
+networks:
+  pikerag-network:
+    driver: bridge 

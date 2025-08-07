@@ -1,4 +1,4 @@
-# Frontend-only Dockerfile for RAGFlow
+# 优化的前端Dockerfile - 减少网络依赖
 # 专门用于构建前端镜像，可以连接到独立的后端容器
 
 # 使用Node.js 20作为基础镜像
@@ -7,12 +7,11 @@ FROM node:20-alpine AS base
 # 设置工作目录
 WORKDIR /ragflow
 
-# 安装必要的系统依赖
+# 安装必要的系统依赖（减少依赖包）
 RUN apk add --no-cache \
     git \
     python3 \
     make \
-    g++ \
     && rm -rf /var/cache/apk/*
 
 # 复制package.json和package-lock.json
@@ -26,7 +25,6 @@ RUN npm ci --ignore-scripts
 # 复制前端源代码
 COPY web/src ./src
 COPY web/public ./public
-COPY web/config ./config
 COPY web/.umirc.ts ./
 COPY web/jest.config.ts ./
 COPY web/jest-setup.ts ./
@@ -35,10 +33,6 @@ COPY web/tailwind.config.js ./
 COPY web/tailwind.css ./
 COPY web/externals.d.ts ./
 COPY web/typings.d.ts ./
-COPY web/.eslintrc.js ./
-COPY web/.prettierrc ./
-COPY web/.prettierignore ./
-COPY web/.npmrc ./
 
 # 复制docs目录，因为前端代码中引用了docs文件
 # 确保docs目录在正确的位置，与@parent别名对应

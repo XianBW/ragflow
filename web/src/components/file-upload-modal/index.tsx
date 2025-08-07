@@ -161,10 +161,7 @@ const FileUploadModal = ({
       >
         <Flex gap={'large'} vertical>
           <Segmented
-            options={[
-              { label: t('local'), value: 'local' },
-              { label: t('s3'), value: 's3' },
-            ]}
+            options={[{ label: t('local'), value: 'local' }]}
             block
             value={value}
             onChange={setValue}

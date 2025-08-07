@@ -23,7 +23,6 @@ export function UploaderTabs({ setFiles }: UploaderTabsProps) {
     <Tabs defaultValue="account">
       <TabsList className="grid w-full grid-cols-2 mb-4">
         <TabsTrigger value="account">{t('fileManager.local')}</TabsTrigger>
-        <TabsTrigger value="password">{t('fileManager.s3')}</TabsTrigger>
       </TabsList>
       <TabsContent value="account">
         <FileUploader
