@@ -1,8 +1,16 @@
 server {
     listen 80;
-    server_name localhost;
+    server_name _;
     root /usr/share/nginx/html;
     index index.html;
+
+    # 增加客户端请求体大小限制，支持大文件上传
+    client_max_body_size 1024M;
+    
+    # 增加超时时间，支持大文件上传
+    proxy_connect_timeout 300s;
+    proxy_send_timeout 300s;
+    proxy_read_timeout 300s;
 
     # 启用gzip压缩
     gzip on;
@@ -21,13 +29,6 @@ server {
         application/atom+xml
         image/svg+xml;
 
-    # 静态文件缓存
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-        try_files $uri =404;
-    }
-
     # 健康检查
     location /health {
         access_log off;
@@ -35,8 +36,8 @@ server {
         add_header Content-Type text/plain;
     }
 
-    # 图片资源代理 - 优先处理
-    location /v1/document/image/ {
+    # 图片资源代理 - 必须放在最前面，优先级最高
+    location ^~ /v1/document/image/ {
         proxy_pass ${API_SERVER_URL}v1/document/image/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -57,7 +58,7 @@ server {
         error_page 502 503 504 = @fallback;
     }
 
-    # API代理配置 - 使用环境变量
+    # API代理配置
     location /api/ {
         proxy_pass ${API_SERVER_URL}api/;
         proxy_set_header Host $host;
@@ -66,9 +67,9 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         
         # 超时设置
-        proxy_connect_timeout 30s;
-        proxy_send_timeout 30s;
-        proxy_read_timeout 30s;
+        proxy_connect_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
         
         # 缓冲设置
         proxy_buffering on;
@@ -80,6 +81,7 @@ server {
         error_page 502 503 504 = @fallback;
     }
 
+    # v1 API代理配置
     location /v1/ {
         proxy_pass ${API_SERVER_URL}v1/;
         proxy_set_header Host $host;
@@ -88,9 +90,9 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         
         # 超时设置
-        proxy_connect_timeout 30s;
-        proxy_send_timeout 30s;
-        proxy_read_timeout 30s;
+        proxy_connect_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
         
         # 缓冲设置
         proxy_buffering on;
@@ -118,12 +120,19 @@ server {
         error_page 502 503 504 = @fallback;
     }
 
+    # 静态文件缓存 - 必须在代理配置之后
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
     # 后端服务不可用时的回退处理
     location @fallback {
         return 503 "Backend service is not available. Please check the API_SERVER_URL environment variable.";
     }
 
-    # 前端路由支持（SPA）
+    # 前端路由支持（SPA）- 必须放在最后
     location / {
         try_files $uri $uri/ /index.html;
         
@@ -141,4 +150,4 @@ server {
     location = /50x.html {
         root /usr/share/nginx/html;
     }
-} 
+}
