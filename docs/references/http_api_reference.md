@@ -5,7 +5,7 @@ slug: /http_api_reference
 
 # HTTP API
 
-A complete reference for RAGFlow's RESTful API. Before proceeding, please ensure you [have your RAGFlow API key ready for authentication](../guides/models/llm_api_key_setup.md).
+A complete reference for PIKE-RAG's RESTful API. Before proceeding, please ensure you [have your PIKE-RAG API key ready for authentication](../guides/models/llm_api_key_setup.md).
 
 ---
 
@@ -419,7 +419,7 @@ curl --request POST \
       - Defaults to `false`
     - `"layout_recognize"`: `string`
       - Defaults to `DeepDOC`
-    - `"tag_kb_ids"`: `array<string>` refer to [Use tag set](https://ragflow.io/docs/dev/use_tag_sets)
+    - `"tag_kb_ids"`: `array<string>` refer to [Use tag set](https://PIKE-RAG.io/docs/dev/use_tag_sets)
       - Must include a list of dataset IDs, where each dataset is parsed using the ​​Tag Chunk Method
     - `"task_page_size"`: `int` For PDF only.
       - Defaults to `12`
@@ -452,7 +452,7 @@ Success:
         "embedding_model": "BAAI/bge-large-zh-v1.5@BAAI",
         "id": "3b4de7d4241d11f0a6a79f24fc270c7f",
         "language": "English",
-        "name": "RAGFlow example",
+        "name": "PIKE-RAG example",
         "pagerank": 0,
         "parser_config": {
             "chunk_token_num": 128, 
@@ -480,7 +480,7 @@ Failure:
 ```json
 {
     "code": 101,
-    "message": "Dataset name 'RAGFlow example' already exists"
+    "message": "Dataset name 'PIKE-RAG example' already exists"
 }
 ```
 
@@ -601,7 +601,7 @@ curl --request PUT \
   - `"me"`: (Default) Only you can manage the dataset.
   - `"team"`: All team members can manage the dataset.
 - `"pagerank"`: (*Body parameter*), `int`  
-  refer to [Set page rank](https://ragflow.io/docs/dev/set_page_rank)
+  refer to [Set page rank](https://PIKE-RAG.io/docs/dev/set_page_rank)
   - Default: `0`
   - Minimum: `0`
   - Maximum: `100`
@@ -640,7 +640,7 @@ curl --request PUT \
       - Defaults to `false`
     - `"layout_recognize"`: `string`
       - Defaults to `DeepDOC`
-    - `"tag_kb_ids"`: `array<string>` refer to [Use tag set](https://ragflow.io/docs/dev/use_tag_sets)
+    - `"tag_kb_ids"`: `array<string>` refer to [Use tag set](https://PIKE-RAG.io/docs/dev/use_tag_sets)
       - Must include a list of dataset IDs, where each dataset is parsed using the ​​Tag Chunk Method
     - `"task_page_size"`: `int` For PDF only.
       - Defaults to `12`
@@ -1087,7 +1087,7 @@ Downloads a document from a specified dataset.
 curl --request GET \
      --url http://{address}/api/v1/datasets/{dataset_id}/documents/{document_id} \
      --header 'Authorization: Bearer <YOUR_API_KEY>' \
-     --output ./ragflow.txt
+     --output ./PIKE-RAG.txt
 ```
 
 ##### Request parameters
@@ -1657,7 +1657,7 @@ curl --request PUT \
      --header 'Authorization: Bearer <YOUR_API_KEY>' \
      --data '
      {   
-          "content": "ragflow123",  
+          "content": "PIKE-RAG123",  
           "important_keywords": []  
      }'
 ```
@@ -1736,7 +1736,7 @@ curl --request POST \
      --header 'Authorization: Bearer <YOUR_API_KEY>' \
      --data '
      {
-          "question": "What is advantage of ragflow?",
+          "question": "What is advantage of PIKE-RAG?",
           "dataset_ids": ["b2a62730759d11ef987d0242ac120004"],
           "document_ids": ["77df9ef4759a11ef8bdd0242ac120004"]
      }'
@@ -1783,11 +1783,11 @@ Success:
     "data": {
         "chunks": [
             {
-                "content": "ragflow content",
-                "content_ltks": "ragflow content",
+                "content": "PIKE-RAG content",
+                "content_ltks": "PIKE-RAG content",
                 "document_id": "5c5999ec7be811ef9cab0242ac120005",
                 "document_keyword": "1.txt",
-                "highlight": "<em>ragflow</em> content",
+                "highlight": "<em>PIKE-RAG</em> content",
                 "id": "d78435d142bd5cf6704da62c778795c5",
                 "image_id": "",
                 "important_keywords": [
@@ -1884,7 +1884,7 @@ curl --request POST \
     Similar to the presence penalty, this reduces the model’s tendency to repeat the same words frequently. Defaults to `0.7`.
 - `"prompt"`: (*Body parameter*), `object`  
   Instructions for the LLM to follow. If it is not explicitly set, a JSON object with the following values will be generated as the default. A `prompt` JSON object contains the following attributes:  
-  - `"similarity_threshold"`: `float` RAGFlow employs either a combination of weighted keyword similarity and weighted vector cosine similarity, or a combination of weighted keyword similarity and weighted reranking score during retrieval. This argument sets the threshold for similarities between the user query and chunks. If a similarity score falls below this threshold, the corresponding chunk will be excluded from the results. The default value is `0.2`.
+  - `"similarity_threshold"`: `float` PIKE-RAG employs either a combination of weighted keyword similarity and weighted vector cosine similarity, or a combination of weighted keyword similarity and weighted reranking score during retrieval. This argument sets the threshold for similarities between the user query and chunks. If a similarity score falls below this threshold, the corresponding chunk will be excluded from the results. The default value is `0.2`.
   - `"keywords_similarity_weight"`: `float` This argument sets the weight of keyword similarity in the hybrid similarity score with vector cosine similarity or reranking model similarity. By adjusting this weight, you can control the influence of keyword similarity in relation to other similarity measures. The default value is `0.7`.
   - `"top_n"`: `int` This argument specifies the number of top chunks with similarity scores above the `similarity_threshold` that are fed to the LLM. The LLM will *only* access these 'top N' chunks.  The default value is `6`.
   - `"variables"`: `object[]` This argument lists the variables to use in the 'System' field of **Chat Configurations**. Note that:  
@@ -2017,7 +2017,7 @@ curl --request PUT \
     Similar to the presence penalty, this reduces the model’s tendency to repeat the same words frequently. Defaults to `0.7`.
 - `"prompt"`: (*Body parameter*), `object`  
   Instructions for the LLM to follow.  A `prompt` object contains the following attributes:  
-  - `"similarity_threshold"`: `float` RAGFlow employs either a combination of weighted keyword similarity and weighted vector cosine similarity, or a combination of weighted keyword similarity and weighted rerank score during retrieval. This argument sets the threshold for similarities between the user query and chunks. If a similarity score falls below this threshold, the corresponding chunk will be excluded from the results. The default value is `0.2`.
+  - `"similarity_threshold"`: `float` PIKE-RAG employs either a combination of weighted keyword similarity and weighted vector cosine similarity, or a combination of weighted keyword similarity and weighted rerank score during retrieval. This argument sets the threshold for similarities between the user query and chunks. If a similarity score falls below this threshold, the corresponding chunk will be excluded from the results. The default value is `0.2`.
   - `"keywords_similarity_weight"`: `float` This argument sets the weight of keyword similarity in the hybrid similarity score with vector cosine similarity or reranking model similarity. By adjusting this weight, you can control the influence of keyword similarity in relation to other similarity measures. The default value is `0.7`.
   - `"top_n"`: `int` This argument specifies the number of top chunks with similarity scores above the `similarity_threshold` that are fed to the LLM. The LLM will *only* access these 'top N' chunks.  The default value is `8`.
   - `"variables"`: `object[]` This argument lists the variables to use in the 'System' field of **Chat Configurations**. Note that:  
@@ -3356,7 +3356,7 @@ Generates five to ten alternative question strings from the user's original quer
 
 This operation requires a `Bearer Login Token`, which typically expires with in 24 hours. You can find the it in the Request Headers in your browser easily as shown below:
 
-![Image](https://raw.githubusercontent.com/infiniflow/ragflow-docs/main/images/login_token.jpg)
+![Image](https://raw.githubusercontent.com/infiniflow/PIKE-RAG-docs/main/images/login_token.jpg)
 
 :::tip NOTE
 The chat model autonomously determines the number of questions to generate based on the instruction, typically between five and ten.
